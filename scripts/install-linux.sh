@@ -22,6 +22,7 @@ GITHUB_REPO="openpubkey/opkssh"
 PROVIDER_GOOGLE="https://accounts.google.com 206584157355-7cbe4s640tvm7naoludob4ut1emii7sf.apps.googleusercontent.com 24h"
 PROVIDER_MICROSOFT="https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/v2.0 096ce0a3-5e72-4da8-9c86-12924b294a01 24h"
 PROVIDER_GITLAB="https://gitlab.com 8d8b7024572c7fd501f64374dec6bba37096783dfcd792b3988104be08cb6923 24h"
+PROVIDER_CLOUDRU="https://id.cloud.ru/auth/system openpubkey 24h"
 
 # AuthorizedKeysCommand user
 AUTH_CMD_USER="opksshuser"
@@ -239,6 +240,7 @@ if command -v $INSTALL_DIR/$BINARY_NAME &> /dev/null; then
         echo "$PROVIDER_GOOGLE" >> /etc/opk/providers
         echo "$PROVIDER_MICROSOFT" >> /etc/opk/providers
         echo "$PROVIDER_GITLAB" >> /etc/opk/providers
+        echo "$PROVIDER_CLOUDRU" >> /etc/opk/providers
     fi
 
     sed -i '/^AuthorizedKeysCommand /s/^/#/' /etc/ssh/sshd_config

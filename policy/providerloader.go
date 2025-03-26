@@ -89,6 +89,11 @@ func (p *ProviderPolicy) CreateVerifier() (*verifier.Verifier, error) {
 			opts.Issuer = row.Issuer
 			opts.ClientID = row.ClientID
 			provider = providers.NewGitlabOpWithOptions(opts)
+		} else if strings.HasPrefix(row.Issuer, "https://id.cloud.ru") {
+			opts := providers.GetDefaultCloudruOpOptions()
+			opts.Issuer = row.Issuer
+			opts.ClientID = row.ClientID
+			provider = providers.NewCloudruOpWithOptions(opts)
 		} else {
 			return nil, fmt.Errorf("unsupported issuer: %s", row.Issuer)
 		}

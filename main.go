@@ -33,6 +33,7 @@ import (
 
 	"github.com/openpubkey/openpubkey/client/choosers"
 	"github.com/openpubkey/openpubkey/providers"
+
 	"github.com/openpubkey/opkssh/commands"
 	"github.com/openpubkey/opkssh/policy"
 	"github.com/openpubkey/opkssh/policy/files"
@@ -159,6 +160,12 @@ func run() int {
 				opts.ClientID = clientIDArg
 				opts.GQSign = false
 				provider = providers.NewGitlabOpWithOptions(opts)
+			} else if strings.HasPrefix(issuerArg, "https://id.cloud.ru/auth/system") {
+				opts := providers.GetDefaultCloudruOpOptions()
+				opts.Issuer = issuerArg
+				opts.ClientID = clientIDArg
+				opts.GQSign = false
+				provider = providers.NewCloudruOpWithOptions(opts)
 			} else {
 				log.Printf("ERROR Unknown issuer supplied: %v \n", issuerArg)
 				return 1
@@ -178,9 +185,13 @@ func run() int {
 			gitlabOpOptions.GQSign = false
 			gitlabOp := providers.NewGitlabOpWithOptions(gitlabOpOptions)
 
+			cloudruOpOptions := providers.GetDefaultCloudruOpOptions()
+			cloudruOpOptions.GQSign = false
+			cloudruOp := providers.NewCloudruOpWithOptions(cloudruOpOptions)
+
 			var err error
 			provider, err = choosers.NewWebChooser(
-				[]providers.BrowserOpenIdProvider{googleOp, azureOp, gitlabOp},
+				[]providers.BrowserOpenIdProvider{googleOp, azureOp, gitlabOp, cloudruOp},
 			).ChooseOp(ctx)
 			if err != nil {
 				log.Println("ERROR selecting op:", err)
@@ -296,6 +307,8 @@ func run() int {
 			inputIssuer = "https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/v2.0"
 		case "gitlab":
 			inputIssuer = "https://gitlab.com"
+		case "cloudru":
+			inputIssuer = "https://id.cloud.ru/auth/system"
 		}
 
 		// Execute add command
